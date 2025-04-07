@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { CalendarDays, TrendingUp, BarChart3 } from "lucide-react";
 
@@ -15,6 +15,19 @@ export default function App() {
   });
 
   const [items, setItems] = useState([]);
+
+  // Load from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("tracker-items");
+    if (stored) {
+      setItems(JSON.parse(stored));
+    }
+  }, []);
+
+  // Save to localStorage
+  useEffect(() => {
+    localStorage.setItem("tracker-items", JSON.stringify(items));
+  }, [items]);
 
   const handleAdd = () => {
     const buy = parseFloat(form.buyPrice);
