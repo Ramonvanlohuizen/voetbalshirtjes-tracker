@@ -11,6 +11,7 @@ export default function App() {
     size: "",
     buyPrice: "",
     sellPrice: "",
+    photo: null,
   });
 
   const [items, setItems] = useState([]);
@@ -20,6 +21,8 @@ export default function App() {
     const sell = parseFloat(form.sellPrice);
     const winst = sell - buy;
     const roi = buy ? (winst / buy) * 100 : 0;
+
+    const photoUrl = form.photo ? URL.createObjectURL(form.photo) : null;
 
     setItems([
       ...items,
@@ -34,6 +37,7 @@ export default function App() {
         sellPrice: sell,
         winst,
         roi,
+        photoUrl,
       },
     ]);
 
@@ -45,6 +49,7 @@ export default function App() {
       size: "",
       buyPrice: "",
       sellPrice: "",
+      photo: null,
     });
   };
 
@@ -110,85 +115,33 @@ export default function App() {
 
       {/* Form */}
       <div className="grid md:grid-cols-2 gap-4 mb-6">
-        <input
-          className="border p-2"
-          placeholder="Shirtnaam"
-          value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-        />
-        <input
-          type="date"
-          className="border p-2"
-          value={form.buyDate}
-          onChange={(e) => setForm({ ...form, buyDate: e.target.value })}
-        />
-        <input
-          type="date"
-          className="border p-2"
-          value={form.sellDate}
-          onChange={(e) => setForm({ ...form, sellDate: e.target.value })}
-        />
-        <input
-          className="border p-2"
-          placeholder="Leverancier"
-          value={form.source}
-          onChange={(e) => setForm({ ...form, source: e.target.value })}
-        />
-        <input
-          className="border p-2"
-          placeholder="Maat"
-          value={form.size}
-          onChange={(e) => setForm({ ...form, size: e.target.value })}
-        />
-        <input
-          className="border p-2"
-          placeholder="Aankoopprijs (€)"
-          value={form.buyPrice}
-          onChange={(e) => setForm({ ...form, buyPrice: e.target.value })}
-        />
-        <input
-          className="border p-2"
-          placeholder="Verkoopprijs (€)"
-          value={form.sellPrice}
-          onChange={(e) => setForm({ ...form, sellPrice: e.target.value })}
-        />
-        <button
-          className="bg-green-600 text-white p-2 rounded"
-          onClick={handleAdd}
-        >
-          Toevoegen
-        </button>
+        <input className="border p-2" placeholder="Shirtnaam" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+        <input type="date" className="border p-2" value={form.buyDate} onChange={(e) => setForm({ ...form, buyDate: e.target.value })} />
+        <input type="date" className="border p-2" value={form.sellDate} onChange={(e) => setForm({ ...form, sellDate: e.target.value })} />
+        <input className="border p-2" placeholder="Leverancier" value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} />
+        <input className="border p-2" placeholder="Maat" value={form.size} onChange={(e) => setForm({ ...form, size: e.target.value })} />
+        <input className="border p-2" placeholder="Aankoopprijs (€)" value={form.buyPrice} onChange={(e) => setForm({ ...form, buyPrice: e.target.value })} />
+        <input className="border p-2" placeholder="Verkoopprijs (€)" value={form.sellPrice} onChange={(e) => setForm({ ...form, sellPrice: e.target.value })} />
+        <input type="file" onChange={(e) => setForm({ ...form, photo: e.target.files?.[0] || null })} />
+        <button className="bg-green-600 text-white p-2 rounded" onClick={handleAdd}>Toevoegen</button>
       </div>
 
       {/* Overzicht */}
       <h2 className="text-lg font-semibold mb-2">Overzicht</h2>
       <div className="space-y-4">
         {items.map((item) => (
-          <div
-            key={item.id}
-            className="border p-4 rounded flex justify-between items-start"
-          >
-            <div>
-              <p className="font-bold">
-                {item.name} ({item.size})
-              </p>
-              <p>
-                Inkoop: €{item.buyPrice} – Verkoop: €{item.sellPrice}
-              </p>
-              <p>
-                Winst: €{item.winst.toFixed(2)} – ROI: {item.roi.toFixed(1)}%
-              </p>
-              <p>
-                Gekocht: {item.buyDate} – Verkocht: {item.sellDate}
-              </p>
+          <div key={item.id} className="border p-4 rounded flex gap-4 items-start">
+            {item.photoUrl && (
+              <img src={item.photoUrl} alt="shirt" className="w-20 h-20 object-cover rounded" />
+            )}
+            <div className="flex-1">
+              <p className="font-bold">{item.name} ({item.size})</p>
+              <p>Inkoop: €{item.buyPrice} – Verkoop: €{item.sellPrice}</p>
+              <p>Winst: €{item.winst.toFixed(2)} – ROI: {item.roi.toFixed(1)}%</p>
+              <p>Gekocht: {item.buyDate} – Verkocht: {item.sellDate}</p>
               <p>Leverancier: {item.source}</p>
             </div>
-            <button
-              className="bg-red-500 text-white px-3 py-1 rounded"
-              onClick={() => handleDelete(item.id)}
-            >
-              Verwijder
-            </button>
+            <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={() => handleDelete(item.id)}>Verwijder</button>
           </div>
         ))}
       </div>
