@@ -1,17 +1,43 @@
-import { useState } from "react";
-import { Card, CardContent } from "./components/ui/card";
-import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
-import { Label } from "./components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./components/ui/tabs";
-import { v4 as uuidv4 } from "uuid";
-import { CalendarDays, TrendingUp, BarChart3 } from "lucide-react";
+import React, { useState } from "react";
 
-export default function App() {
+function App() {
+  const [shirt, setShirt] = useState("");
+  const [shirts, setShirts] = useState<string[]>([]);
+
+  const voegToe = () => {
+    if (shirt.trim() !== "") {
+      setShirts([...shirts, shirt]);
+      setShirt("");
+    }
+  };
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center text-center p-4">
-      <h1 className="text-3xl font-bold mb-2">Voetbaltracker werkt! ✅</h1>
-      <p className="text-lg text-gray-600">Je hebt het geflikt Ramon 🔥</p>
+    <div style={{ textAlign: "center", marginTop: "50px", fontFamily: "Arial" }}>
+      <h1 style={{ fontSize: "2rem", color: "orange" }}>Voetbalshirtjes Tracker</h1>
+      
+      <input
+        type="text"
+        value={shirt}
+        onChange={(e) => setShirt(e.target.value)}
+        placeholder="Voer shirt in..."
+        style={{ padding: "8px", width: "200px", marginRight: "10px" }}
+      />
+      <button
+        onClick={voegToe}
+        style={{ padding: "8px 16px", background: "green", color: "white", border: "none", cursor: "pointer" }}
+      >
+        Toevoegen
+      </button>
+
+      <ul style={{ marginTop: "30px", listStyle: "none", padding: 0 }}>
+        {shirts.map((item, index) => (
+          <li key={index} style={{ fontSize: "1.1rem", marginBottom: "10px" }}>
+            👕 {item}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
+
+export default App;
